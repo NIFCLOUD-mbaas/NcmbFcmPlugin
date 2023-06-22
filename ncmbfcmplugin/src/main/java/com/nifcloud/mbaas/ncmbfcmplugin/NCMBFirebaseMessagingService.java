@@ -1,6 +1,6 @@
 /*******
  Copyright 2017-2022 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
- 
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
@@ -67,16 +67,18 @@ public class NCMBFirebaseMessagingService extends FirebaseMessagingService {
 	public void onNewToken(String token) {
 		// Send refesh token to update installation
 		final String saveToken = token;
-		UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
-			public void run() {
-				UnityPlayer.UnitySendMessage("NCMBManager", "onTokenReceived", saveToken);
-			}
-		});
+		if ( UnityPlayer.currentActivity != null) {
+			UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
+				public void run() {
+					UnityPlayer.UnitySendMessage("NCMBManager", "onTokenReceived", saveToken);
+				}
+			});
+		}
 	}
 
 	@Override
 	public void onMessageReceived(RemoteMessage remoteMessage) {
-		
+
 		if (remoteMessage != null && remoteMessage.getData() != null){
 			SharedPreferences recentPushIdPref = this.getSharedPreferences("ncmbPushId", Context.MODE_PRIVATE);
 			String recentPushId = recentPushIdPref.getString("recentPushId", "");
